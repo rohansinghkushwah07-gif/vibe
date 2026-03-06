@@ -1,18 +1,25 @@
-"use server"
-import { Button } from "@/components/ui/button";
-import { Prisma }  from "@/generated/prisma/client";
-import prisma from "@/lib/db";
-import { useTRPC } from "@/trpc/client";
-import { caller } from "@/trpc/server";
-import { useQuery } from "@tanstack/react-query";
+"use client";
 
-const page =  async () => {
-   const data  = await caller.hello({text: "Antonio SERVER"}); 
+import { useTRPC } from "@/trpc/client";
+import { Button } from "@base-ui/react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+
+const page = () => {
+  const trpc = useTRPC();
+  const invoke = useMutation(trpc.invoke.mutationOptions ({
+    onSuccess : () => {
+      toast.success("Background job started")
+    }
+  }));
   return (
-    <div>
-     {JSON.stringify(data)}
+    <div className="p-4 max-w-7xl">
+        <Button disabled={invoke.isPending} onClick={() => invoke.mutate({ text : "john"})}>
+          invoke Background job
+        </Button>
     </div>
   );
 }
+
 
 export default page;
