@@ -1,12 +1,16 @@
+"use server"
 import { Button } from "@/components/ui/button";
 import { Prisma }  from "@/generated/prisma/client";
 import prisma from "@/lib/db";
+import { useTRPC } from "@/trpc/client";
+import { caller } from "@/trpc/server";
+import { useQuery } from "@tanstack/react-query";
 
-const page = async () => {
-  const users = await prisma.user.findMany();
+const page =  async () => {
+   const data  = await caller.hello({text: "Antonio SERVER"}); 
   return (
     <div>
-       {JSON.stringify(users,null,2)}
+     {JSON.stringify(data)}
     </div>
   );
 }
